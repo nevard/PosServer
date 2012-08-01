@@ -33,9 +33,11 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.HashMap;
 
 import javax.swing.BorderFactory;
@@ -738,7 +740,7 @@ public class GUIDemo {
 				File selectedFile = chooser.getSelectedFile();
 				
 				try {
-					BufferedReader br = new BufferedReader(new FileReader(selectedFile));
+					BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(selectedFile), "UTF-8"));
 					String line = null;
 					while ((line = br.readLine()) != null) {
 						inputTextArea.append(line + "\n");

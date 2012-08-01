@@ -1,7 +1,8 @@
 package kr.pe.nevard.posserver;
 
 import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.PrintStream;
+import java.util.LinkedList;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -9,6 +10,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import kr.ac.kaist.swrc.jhannanum.comm.Eojeol;
+import kr.ac.kaist.swrc.jhannanum.comm.Sentence;
 import kr.ac.kaist.swrc.jhannanum.hannanum.Workflow;
 import kr.ac.kaist.swrc.jhannanum.hannanum.WorkflowFactory;
 
@@ -32,42 +35,53 @@ public class PosServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException 
 	{
-		Workflow workflow1 = WorkflowFactory.getPredefinedWorkflow(WorkflowFactory.WORKFLOW_HMM_POS_TAGGER);
-		Workflow workflow2 = WorkflowFactory.getPredefinedWorkflow(WorkflowFactory.WORKFLOW_POS_SIMPLE_09);
-		
-		try {
-			// Activate the work flow in the thread mode
-			workflow1.activateWorkflow(true);
-			workflow2.activateWorkflow(true);
-			
-			// Analysis using the work flow
-			String sentence = "학교에서조차도 그 사실을 모르고 있었다.";
-			workflow1.analyze(sentence);
-			workflow2.analyze(sentence);
-
-			PrintWriter out = new PrintWriter(response.getOutputStream());
-			out.println("<pre>");
-			out.println("# POS tagging result with 69 tags.\n");
-			out.println(workflow1.getResultOfSentence());
-			
-			out.println("# POS tagging result with 9 tags.\n");
-			out.println(workflow2.getResultOfSentence());
-			out.flush();			
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		// Shutdown the work flow
-		workflow1.close();  	
-		workflow2.close();
-	
+		request.setCharacterEncoding("UTF-8");
+		response.setCharacterEncoding("UTF-8");
+		request.getRequestDispatcher("/form.jsp").forward(request, response);
 	}
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
+		request.setCharacterEncoding("UTF-8");
+		response.setCharacterEncoding("UTF-8");
+		
+		Workflow workflow = WorkflowFactory.getPredefinedWorkflow(WorkflowFactory.WORKFLOW_NOUN_EXTRACTOR);
+		PrintStream out = new PrintStream(response.getOutputStream());
+		
+		try
+		{
+			/* Activate the work flow in the thread mode */
+			workflow.activateWorkflow(true);
+			
+			/* Analysis using the work flow */
+			String document = request.getParameter("sentence");
+			workflow.analyze(document);
+			
+			LinkedList<Sentence> resultList = workflow.getResultOfDocument(new Sentence(0, 0, false));
+			for (Sentence s : resultList) {
+				Eojeol[] eojeolArray = s.getEojeols();
+				for (int i = 0; i < eojeolArray.length; i++) {
+					if (eojeolArray[i].length > 0) {
+						String[] morphemes = eojeolArray[i].getMorphemes();
+						for (int j = 0; j < morphemes.length; j++) {
+							out.print(morphemes[j]);
+						}
+						out.print(", ");
+					}
+				}
+			}
+		}
+		catch(Exception e)
+		{
+			out.println("<xmp>");
+			e.printStackTrace(out);
+			out.println("</xmp>");
+		}
+		out.flush();
+			
+		// Shutdown the work flow
+		workflow.close();		
 	}
-
 }

@@ -119,7 +119,7 @@ public class ConnectionNot {
 	 * @throws IOException
 	 */
 	private void readFile(String filePath, TagSet tagSet) throws IOException {
-		BufferedReader br = new BufferedReader(new InputStreamReader(Thread.currentThread().getContextClassLoader().getResourceAsStream(filePath)));
+		BufferedReader br = new BufferedReader(new InputStreamReader(Thread.currentThread().getContextClassLoader().getResourceAsStream(filePath), "UTF-8"));
 		String line = null;
 		ArrayList<String> ruleList = new ArrayList<String>();
 

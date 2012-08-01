@@ -131,7 +131,7 @@ public class Connection {
 	 * @throws IOException
 	 */
 	private void readFile(String filePath, int tagCount, TagSet tagSet) throws IOException {
-		BufferedReader br = new BufferedReader(new InputStreamReader(Thread.currentThread().getContextClassLoader().getResourceAsStream(filePath)));
+		BufferedReader br = new BufferedReader(new InputStreamReader(Thread.currentThread().getContextClassLoader().getResourceAsStream(filePath), "UTF-8"));
 		String line = null;
 		HashSet<Integer> tagSetA = new HashSet<Integer>();
 		HashSet<Integer> tagSetB = new HashSet<Integer>();
@@ -158,7 +158,6 @@ public class Connection {
 			}
 			
 			String lineToken = lineTokenizer.nextToken();
-			
 			if (lineToken.startsWith("@")) {
 				if ("@title".equals(lineToken)) {
 					title = lineTokenizer.nextToken();

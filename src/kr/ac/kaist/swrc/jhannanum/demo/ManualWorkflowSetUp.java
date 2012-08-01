@@ -101,14 +101,14 @@ public class ManualWorkflowSetUp {
 			String document = "한나눔 형태소 분석기는 KLDP에서 제공하는 공개 소프트웨어 프로젝트 사이트에 등록되어 있다.";
 			
 			workflow.analyze(document);
-			System.out.println(workflow.getResultOfDocument());
+			//System.out.println(workflow.getResultOfDocument());
 			
 			/* Once a work flow is activated, it can be used repeatedly. */
 			document = "日時: 2010년 7월 30일 오후 1시\n"
 				+ "場所: Coex Conference Room\n";
 			
 			workflow.analyze(document);
-			System.out.println(workflow.getResultOfDocument());
+			//System.out.println(workflow.getResultOfDocument());
 			
 			/* Close the work flow */
 			workflow.close();

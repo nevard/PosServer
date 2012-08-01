@@ -254,7 +254,7 @@ public class TagSet {
 	 * @throws IOException
 	 */
 	public void init(String filePath, int tagSetFlag) throws IOException {
-		BufferedReader br = new BufferedReader(new InputStreamReader(Thread.currentThread().getContextClassLoader().getResourceAsStream(filePath)));
+		BufferedReader br = new BufferedReader(new InputStreamReader(Thread.currentThread().getContextClassLoader().getResourceAsStream(filePath), "UTF-8"));
 		String line = null;
 		
 		title = "";

@@ -44,13 +44,14 @@ public class JSONReader {
 	 * @throws IOException
 	 */
 	public JSONReader(String filePath) throws JSONException, IOException {
-		InputStreamReader reader = new InputStreamReader(Thread.currentThread().getContextClassLoader().getResourceAsStream(filePath));
+		InputStreamReader reader = new InputStreamReader(Thread.currentThread().getContextClassLoader().getResourceAsStream(filePath), "UTF-8");
 		StringBuffer buf = new StringBuffer();
 		char[] cbuf = new char[4096];
 		int idx = 0;
 		while ((idx = reader.read(cbuf)) != -1) {
 			buf.append(cbuf, 0, idx);
 		}
+		System.out.println(buf.toString());
 		json = new JSONObject(buf.toString());
 		
 		reader.close();
