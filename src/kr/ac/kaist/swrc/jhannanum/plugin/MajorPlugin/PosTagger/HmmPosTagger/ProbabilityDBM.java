@@ -63,7 +63,7 @@ public class ProbabilityDBM {
 	 * @throws IOException
 	 */
 	private void init(String fileName) throws IOException {
-		BufferedReader br = new BufferedReader(new InputStreamReader(Thread.currentThread().getContextClassLoader().getResourceAsStream(fileName)));
+		BufferedReader br = new BufferedReader(new InputStreamReader(Thread.currentThread().getContextClassLoader().getResourceAsStream(fileName), "UTF-8"));
 		String line = null;
 		String[] tokens = null;
 		double[] numbers = null;

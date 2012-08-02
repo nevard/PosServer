@@ -354,7 +354,7 @@ public class Trie {
 	public void read_dic(String dictionaryFileName, TagSet tagSet) throws IOException{
 		String str = "";
 
-		BufferedReader in = new BufferedReader(new InputStreamReader(Thread.currentThread().getContextClassLoader().getResourceAsStream(dictionaryFileName)));
+		BufferedReader in = new BufferedReader(new InputStreamReader(Thread.currentThread().getContextClassLoader().getResourceAsStream(dictionaryFileName), "UTF-8"));
 		INFO[] info_list = new INFO[255];
 		for (int i = 0; i < 255; i++) {
 			info_list[i] = new INFO();

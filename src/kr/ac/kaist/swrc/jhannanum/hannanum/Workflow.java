@@ -19,8 +19,10 @@ package kr.ac.kaist.swrc.jhannanum.hannanum;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -536,7 +538,7 @@ public class Workflow {
 	 * @throws IOException
 	 */
 	public void analyze(File document) throws IOException {
-		BufferedReader br = new BufferedReader(new FileReader(document));
+		BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(document), "UTF-8"));
 		LinkedBlockingQueue<PlainSentence> queue = queuePhase1.get(0);
 		
 		if (queue == null) {

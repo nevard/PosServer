@@ -1,7 +1,10 @@
 package kr.pe.nevard.posserver;
 
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.io.PrintStream;
+import java.io.PrintWriter;
+import java.util.Collection;
 import java.util.LinkedList;
 
 import javax.servlet.ServletException;
@@ -12,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import kr.ac.kaist.swrc.jhannanum.comm.Eojeol;
 import kr.ac.kaist.swrc.jhannanum.comm.Sentence;
+import kr.ac.kaist.swrc.jhannanum.exception.ResultTypeException;
 import kr.ac.kaist.swrc.jhannanum.hannanum.Workflow;
 import kr.ac.kaist.swrc.jhannanum.hannanum.WorkflowFactory;
 
@@ -47,41 +51,19 @@ public class PosServlet extends HttpServlet {
 		request.setCharacterEncoding("UTF-8");
 		response.setCharacterEncoding("UTF-8");
 		
-		Workflow workflow = WorkflowFactory.getPredefinedWorkflow(WorkflowFactory.WORKFLOW_NOUN_EXTRACTOR);
-		PrintStream out = new PrintStream(response.getOutputStream());
-		
-		try
-		{
-			/* Activate the work flow in the thread mode */
-			workflow.activateWorkflow(true);
-			
-			/* Analysis using the work flow */
-			String document = request.getParameter("sentence");
-			workflow.analyze(document);
-			
-			LinkedList<Sentence> resultList = workflow.getResultOfDocument(new Sentence(0, 0, false));
-			for (Sentence s : resultList) {
-				Eojeol[] eojeolArray = s.getEojeols();
-				for (int i = 0; i < eojeolArray.length; i++) {
-					if (eojeolArray[i].length > 0) {
-						String[] morphemes = eojeolArray[i].getMorphemes();
-						for (int j = 0; j < morphemes.length; j++) {
-							out.print(morphemes[j]);
-						}
-						out.print(", ");
-					}
-				}
+		PrintWriter out = new PrintWriter(new OutputStreamWriter(response.getOutputStream(), "UTF-8"));
+	
+		PosService service = PosService.getInstance();
+		try {
+			Collection<String> ret = service.service(request.getParameter("sentence"));
+			for(String r : ret)
+			{
+				out.print(r);
+				out.print(",");
 			}
-		}
-		catch(Exception e)
-		{
-			out.println("<xmp>");
-			e.printStackTrace(out);
-			out.println("</xmp>");
+		} catch (ResultTypeException e1) {
+			out.println(e1.getMessage());
 		}
 		out.flush();
-			
-		// Shutdown the work flow
-		workflow.close();		
 	}
 }
